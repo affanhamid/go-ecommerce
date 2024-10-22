@@ -25,6 +25,6 @@ func main() {
 
 	routes.LoadRoutes()
 
-	fmt.Println("Starting server on http://localhost:" + port)
+	fmt.Printf("Starting server on http://localhost:%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
