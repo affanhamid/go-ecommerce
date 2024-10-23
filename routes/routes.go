@@ -10,6 +10,7 @@ import (
 func LoadRoutes() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
-	http.HandleFunc("/database/create", middleware.CheckMethod("GET", controllers.CreateTablesHandler))
-	http.HandleFunc("/database/dropAll", middleware.CheckMethod("GET", controllers.DropTablesHandler))
+	http.HandleFunc("/api/admin/create", middleware.CheckMethod("POST", controllers.CreateTablesHandler))
+	http.HandleFunc("/api/admin/drop-all", middleware.CheckMethod("POST", controllers.DropTablesHandler))
+	http.HandleFunc("/api/add-user", middleware.CheckMethod("POST", controllers.AddUser))
 }
