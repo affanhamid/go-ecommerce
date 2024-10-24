@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login Form</title>
+    <title>User SignUp Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,24 +43,45 @@
             color: red;
             margin-top: 5px;
         }
+
+        .country-and-phone {
+            display:flex;
+            gap:5px;
+        }
+        #countryCode {
+            width:10%;
+        }
+
+        #phoneNumber {
+            width:72%;
+        }
+
+        .go-back {
+            position:absolute;
+            top:20px;
+            left:20px;
+            color:black;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
 
+<a href="/" class="go-back">go back</a>
 <div class="container">
-    <h2>User Login</h2>
-    <form id="loginForm">
+    <h2>User Sign Up</h2>
+    <form id="sign-up-form">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
         <div id="emailError" class="error"></div>
-
-        <label for="countryCode">Country Code:</label>
-        <input type="text" id="countryCode" name="country_code" required>
-        <div id="countryCodeError" class="error"></div>
-
         <label for="phoneNumber">Phone Number:</label>
-        <input type="text" id="phoneNumber" name="phone_number" required>
-        <div id="phoneNumberError" class="error"></div>
+        <div class="country-and-phone">
+            <input type="text" id="countryCode" name="country_code" required>
+            <div id="countryCodeError" class="error"></div>
+    
+            <input type="text" id="phoneNumber" name="phone_number" required>
+            <div id="phoneNumberError" class="error"></div>
+        </div>
 
         <label for="firstName">First Name:</label>
         <input type="text" id="firstName" name="first_name" required>
@@ -75,7 +96,7 @@
 </div>
 
 <script>
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
+    document.getElementById("sign-up-form").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent form from submitting the default way
 
         // Reset previous errors
@@ -143,13 +164,14 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.error || "Error occurred"); });
+                    return response.json().then(err => { throw new Error(err.message || "Error occurred"); });
                 }
                 return response.json();
             })
             .then(data => {
                 // Handle the JSON payload
                 alert('Success: ' + data.message);
+                window.location.href = "/"
             })
             .catch(error => {
                 // Handle errors

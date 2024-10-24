@@ -75,6 +75,11 @@ func CreateUser(user *models.User, DB *gorm.DB) error {
 }
 
 func DeleteUser(user *models.DeleteUser, DB *gorm.DB) error {
-	result := DB.Where("email = ?", user.Email).Delete(&models.User{})
-	return result.Error
+	var existingUser models.User
+	if err := DB.Where("email = ?", user.Email).First(&existingUser).Error; err != nil {
+		return err
+	}
+
+	DB.Where("email = ?", user.Email).Delete(&models.User{})
+	return nil
 }

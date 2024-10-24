@@ -64,7 +64,7 @@ func TestAddUser__ValidJson(t *testing.T) {
 	db := database.Connect()
 	app := controllers.App{DB: db}
 
-	utils.Test(t, req, app.CreateUserHandler, http.StatusOK, "User data added!")
+	utils.Test(t, req, app.CreateUserHandler, http.StatusOK, "{\"message\":\"User data added successfully!\"}")
 }
 
 func TestAddUser__ValidationFalseCases(t *testing.T) {
@@ -232,5 +232,23 @@ func TestDeleteUser__ValidJson(t *testing.T) {
 	db := database.Connect()
 	app := controllers.App{DB: db}
 
-	utils.Test(t, req, app.DeleteUserHandler, http.StatusOK, "User deleted successfully!")
+	utils.Test(t, req, app.DeleteUserHandler, http.StatusOK, "{\"message\":\"User deleted succesfully!\"")
+}
+
+func TestDeleteUser__UserDoesNotExist(t *testing.T) {
+
+	testJson := `{
+		"email": "doesNotExist@gmail.com"
+		}`
+
+	req, err := http.NewRequest(http.MethodPost, "/api/delete-user", bytes.NewBuffer([]byte(testJson)))
+	if err != nil {
+		t.Fatalf("(ValidJson) Could not create request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	db := database.Connect()
+	app := controllers.App{DB: db}
+
+	utils.Test(t, req, app.DeleteUserHandler, http.StatusBadRequest, "")
 }

@@ -31,10 +31,10 @@ func ValidateAndDecode(w http.ResponseWriter, r *http.Request, v interface{}) bo
 	return true
 }
 
-func SendJSONError(w http.ResponseWriter, status int, message string) {
+func SendJSONMessage(w http.ResponseWriter, status int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(map[string]string{
-		"error": message,
+		"message": message,
 	})
 }

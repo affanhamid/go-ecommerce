@@ -15,7 +15,8 @@ func LoadRoutes() {
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "./static/login.html") })
+	http.HandleFunc("/signup", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "./static/signup.html") })
+	http.HandleFunc("/delete-account", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, "./static/delete.html") })
 
 	http.HandleFunc("/api/admin/create", middleware.CheckMethod("POST", app.CreateTablesHandler))
 	http.HandleFunc("/api/admin/drop-all", middleware.CheckMethod("POST", app.DropTablesHandler))

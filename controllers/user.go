@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -33,19 +32,17 @@ func (app *App) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		if errors.As(err, &pgError) {
 			switch pgError.Code {
 			case "23505": // Unique Violation
-				utils.SendJSONError(w, http.StatusConflict, "User already exists with that email")
+				utils.SendJSONMessage(w, http.StatusConflict, "User already exists with that email")
 			default:
-				utils.SendJSONError(w, http.StatusInternalServerError, "Database Error"+pgError.Message)
+				utils.SendJSONMessage(w, http.StatusInternalServerError, "Database Error"+pgError.Message)
 			}
 		} else {
 			// Non-Postgres error
-			utils.SendJSONError(w, http.StatusInternalServerError, "Failed to add user: "+err.Error())
+			utils.SendJSONMessage(w, http.StatusInternalServerError, "Failed to add user: "+err.Error())
 		}
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message": "User data added successfully!"})
+	utils.SendJSONMessage(w, http.StatusOK, "User data added successfully!")
 }
 
 func (app *App) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -60,10 +57,8 @@ func (app *App) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := database.DeleteUser(&user, app.DB); err != nil {
-		http.Error(w, "Internal Server Error: "+err.Error(), http.StatusInternalServerError)
+		utils.SendJSONMessage(w, http.StatusBadRequest, "User does not exist")
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message": "User deleted successfully!"})
+	utils.SendJSONMessage(w, http.StatusOK, "User deleted succesfully!")
 }
