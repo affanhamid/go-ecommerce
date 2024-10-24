@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .container h2 {
+            text-align: center;
+        }
+        .container input[type="text"],
+        .container input[type="email"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            margin-top:10px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>User Login</h2>
+    <form id="loginForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <div id="emailError" class="error"></div>
+
+        <label for="countryCode">Country Code:</label>
+        <input type="text" id="countryCode" name="country_code" required>
+        <div id="countryCodeError" class="error"></div>
+
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" id="phoneNumber" name="phone_number" required>
+        <div id="phoneNumberError" class="error"></div>
+
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="first_name" required>
+        <div id="firstNameError" class="error"></div>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="last_name" required>
+        <div id="lastNameError" class="error"></div>
+
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form from submitting the default way
+
+        // Reset previous errors
+        document.getElementById("emailError").innerText = "";
+        document.getElementById("countryCodeError").innerText = "";
+        document.getElementById("phoneNumberError").innerText = "";
+        document.getElementById("firstNameError").innerText = "";
+        document.getElementById("lastNameError").innerText = "";
+
+        let isValid = true;
+
+        // Email validation
+        const email = document.getElementById("email").value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById("emailError").innerText = "Invalid email format.";
+            isValid = false;
+        }
+
+        // Country code validation (should start with a + and be followed by numbers)
+        const countryCode = document.getElementById("countryCode").value;
+        if (!countryCode.startsWith("+") || countryCode.length < 2 || isNaN(countryCode.slice(1))) {
+            document.getElementById("countryCodeError").innerText = "Invalid country code. It should start with a '+' and contain numbers.";
+            isValid = false;
+        }
+
+        // Phone number validation (10 digits)
+        const phoneNumber = document.getElementById("phoneNumber").value;
+        if (phoneNumber.length !== 10 || isNaN(phoneNumber)) {
+            document.getElementById("phoneNumberError").innerText = "Phone number must be exactly 10 digits.";
+            isValid = false;
+        }
+
+        // First name validation (min 2 characters, max 100)
+        const firstName = document.getElementById("firstName").value;
+        if (firstName.length < 2 || firstName.length > 100) {
+            document.getElementById("firstNameError").innerText = "First name must be between 2 and 100 characters.";
+            isValid = false;
+        }
+
+        // Last name validation (min 2 characters, max 100)
+        const lastName = document.getElementById("lastName").value;
+        if (lastName.length < 2 || lastName.length > 100) {
+            document.getElementById("lastNameError").innerText = "Last name must be between 2 and 100 characters.";
+            isValid = false;
+        }
+
+        // If the form is valid, send the POST request
+        if (isValid) {
+            const data = {
+                email: email,
+                country_code: countryCode,
+                phone_number: phoneNumber,
+                first_name: firstName,
+                last_name: lastName
+            };
+
+            // Send the POST request to the server
+            fetch('/api/add-user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || "Error occurred"); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle the JSON payload
+                alert('Success: ' + data.message);
+            })
+            .catch(error => {
+                // Handle errors
+                alert('Error: ' + error.message);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

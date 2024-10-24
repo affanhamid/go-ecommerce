@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/affanhamid/go-ecommerce/controllers"
+	"github.com/affanhamid/go-ecommerce/database"
+	"github.com/affanhamid/go-ecommerce/utils"
 )
 
 // Testing Invalid Content Type
@@ -15,7 +17,10 @@ func TestAddUser__InvalidContentType(t *testing.T) {
 		t.Fatalf("Couldn't create request: %v", err)
 	}
 
-	controllers.Test(t, req, controllers.AddUser, http.StatusUnsupportedMediaType, "Content-Type must be 'application/json'")
+	db := database.Connect()
+	app := controllers.App{DB: db}
+
+	utils.Test(t, req, app.CreateUserHandler, http.StatusUnsupportedMediaType, "Content-Type must be 'application/json'")
 }
 
 // Testing Body
@@ -28,7 +33,10 @@ func TestAddUser__InvalidJSON(t *testing.T) {
 
 	req.Header.Set("Content-Type", "application/json")
 
-	controllers.Test(t, req, controllers.AddUser, http.StatusBadRequest, "Invalid JSON format")
+	db := database.Connect()
+	app := controllers.App{DB: db}
+
+	utils.Test(t, req, app.CreateUserHandler, http.StatusBadRequest, "")
 }
 
 type TestCase struct {
@@ -52,8 +60,11 @@ func TestAddUser__ValidJson(t *testing.T) {
 		t.Fatalf("(ValidJson) Could not create request: %v", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	controllers.Test(t, req, controllers.AddUser, http.StatusOK, "User data added!")
 
+	db := database.Connect()
+	app := controllers.App{DB: db}
+
+	utils.Test(t, req, app.CreateUserHandler, http.StatusOK, "User data added!")
 }
 
 func TestAddUser__ValidationFalseCases(t *testing.T) {
@@ -198,6 +209,28 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 			t.Fatalf("(%s) Could not create request: %v", tc.name, err)
 		}
 		req.Header.Set("Content-Type", "application/json")
-		controllers.Test(t, req, controllers.AddUser, tc.expectedStatus, "")
+
+		db := database.Connect()
+		app := controllers.App{DB: db}
+
+		utils.Test(t, req, app.CreateUserHandler, tc.expectedStatus, "")
 	}
+}
+
+func TestDeleteUser__ValidJson(t *testing.T) {
+
+	testJson := `{
+		"email": "test@example.com"
+		}`
+
+	req, err := http.NewRequest(http.MethodPost, "/api/delete-user", bytes.NewBuffer([]byte(testJson)))
+	if err != nil {
+		t.Fatalf("(ValidJson) Could not create request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	db := database.Connect()
+	app := controllers.App{DB: db}
+
+	utils.Test(t, req, app.DeleteUserHandler, http.StatusOK, "User deleted successfully!")
 }

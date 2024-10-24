@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS Users
 (
   email VARCHAR(255) NOT NULL,
+  country_code VARCHAR(4) NOT NULL,
   phone_number VARCHAR(15) NOT NULL,
   first_name VARCHAR(100) NOT NULL,
   last_name VARCHAR(100) NOT NULL,
