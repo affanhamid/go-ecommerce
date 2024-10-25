@@ -61,7 +61,7 @@ func runSQLFile(DB *gorm.DB, file string) error {
 }
 
 func CreateTables(DB *gorm.DB) error {
-	return runSQLFile(DB, "create")
+	return DB.AutoMigrate(&models.User{})
 }
 
 func DropTables(DB *gorm.DB) error {
@@ -80,6 +80,16 @@ func DeleteUser(user *models.DeleteUser, DB *gorm.DB) error {
 		return err
 	}
 
-	DB.Where("email = ?", user.Email).Delete(&models.User{})
+	DB.Where("email = ?", user.Email).Delete(&existingUser)
+	return nil
+}
+
+func DeleteUserPerma(user *models.DeleteUser, DB *gorm.DB) error {
+	var existingUser models.User
+	if err := DB.Unscoped().Where("email = ?", user.Email).First(&existingUser).Error; err != nil {
+		return err
+	}
+
+	DB.Unscoped().Where("email = ?", user.Email).Delete(&existingUser)
 	return nil
 }

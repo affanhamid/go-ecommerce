@@ -52,7 +52,9 @@ func TestAddUser__ValidJson(t *testing.T) {
 		"country_code": "+1",
 		"phone_number": "1234567890",
 		"first_name": "John",
-		"last_name": "Doe"
+		"last_name": "Doe",
+		"password": "password123",
+		"user_type": "USER"
 		}`
 
 	req, err := http.NewRequest(http.MethodPost, "/api/add-user", bytes.NewBuffer([]byte(testJson)))
@@ -76,7 +78,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "1234567890",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -87,7 +91,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "1234567890",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -98,7 +104,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "1234567890",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -109,7 +117,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "1234567890",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -120,7 +130,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "1234567890",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -131,7 +143,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "1234567890111",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -142,7 +156,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "12345611",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -153,7 +169,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "12345676a90",
 				"first_name": "John",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -164,7 +182,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "12345676a90",
 				"first_name": "a",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -175,7 +195,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "12345676a90",
 				"first_name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-				"last_name": "Doe"
+				"last_name": "Doe",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -186,7 +208,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "12345676a90",
 				"first_name": "John",
-				"last_name": "a"
+				"last_name": "a",
+				"password": "password123",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -197,7 +221,22 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 				"country_code": "+1",
 				"phone_number": "12345676a90",
 				"first_name": "John",
-				"last_name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+				"last_name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+				"password": "password123",
+				"user_type": "USER"
+				}`,
+			expectedStatus: http.StatusBadRequest,
+		},
+		{
+			name: "no password",
+			user: `{
+				"email": "testing@example.com",
+				"country_code": "+1",
+				"phone_number": "12345676a90",
+				"first_name": "John",
+				"last_name": "Doe",
+				"password": "",
+				"user_type": "USER"
 				}`,
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -232,7 +271,25 @@ func TestDeleteUser__ValidJson(t *testing.T) {
 	db := database.Connect()
 	app := controllers.App{DB: db}
 
-	utils.Test(t, req, app.DeleteUserHandler, http.StatusOK, "{\"message\":\"User deleted succesfully!\"")
+	utils.Test(t, req, app.DeleteUserHandler, http.StatusOK, "{\"message\":\"User deleted succesfully!\"}")
+}
+
+func TestDeleteUserPerma__ValidJson(t *testing.T) {
+
+	testJson := `{
+		"email": "test@example.com"
+		}`
+
+	req, err := http.NewRequest(http.MethodPost, "/api/delete-user-permanent", bytes.NewBuffer([]byte(testJson)))
+	if err != nil {
+		t.Fatalf("(ValidJson) Could not create request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	db := database.Connect()
+	app := controllers.App{DB: db}
+
+	utils.Test(t, req, app.DeleteUserPermaHandler, http.StatusOK, "{\"message\":\"User deleted permanently succesfully!\"}")
 }
 
 func TestDeleteUser__UserDoesNotExist(t *testing.T) {
