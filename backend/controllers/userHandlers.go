@@ -11,11 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type App struct {
+type Controller struct {
 	DB *gorm.DB
 }
 
-func (app *App) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !utils.ValidateJSONContentType(w, r) {
 		return
@@ -26,7 +26,7 @@ func (app *App) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := database.CreateUser(&user, app.DB); err != nil {
+	if err := database.CreateUser(&user, c.DB); err != nil {
 
 		var pgError *pgconn.PgError
 		if errors.As(err, &pgError) {
@@ -45,7 +45,7 @@ func (app *App) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	utils.SendJSONMessage(w, http.StatusOK, "User data added successfully!")
 }
 
-func (app *App) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !utils.ValidateJSONContentType(w, r) {
 		return
@@ -56,14 +56,14 @@ func (app *App) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := database.DeleteUser(&user, app.DB); err != nil {
+	if err := database.DeleteUser(&user, c.DB); err != nil {
 		utils.SendJSONMessage(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	utils.SendJSONMessage(w, http.StatusOK, "User deleted succesfully!")
 }
 
-func (app *App) DeleteUserPermaHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) DeleteUserPermaHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !utils.ValidateJSONContentType(w, r) {
 		return
@@ -74,7 +74,7 @@ func (app *App) DeleteUserPermaHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := database.DeleteUserPerma(&user, app.DB); err != nil {
+	if err := database.DeleteUserPerma(&user, c.DB); err != nil {
 		utils.SendJSONMessage(w, http.StatusBadRequest, err.Error())
 		return
 	}

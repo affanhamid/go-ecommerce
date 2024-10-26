@@ -18,9 +18,9 @@ func TestCreatetable__InvalidMethod(t *testing.T) {
 	}
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, middleware.CheckMethod("POST", app.CreateTablesHandler), http.StatusNotFound, "method not expected")
+	utils.Test(t, req, middleware.CheckMethod("POST", c.CreateTablesHandler), http.StatusNotFound, "method not expected")
 }
 
 func TestDroptable__InvalidMethod(t *testing.T) {
@@ -30,9 +30,9 @@ func TestDroptable__InvalidMethod(t *testing.T) {
 	}
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, middleware.CheckMethod("POST", app.DropTablesHandler), http.StatusNotFound, "method not expected")
+	utils.Test(t, req, middleware.CheckMethod("POST", c.DropTablesHandler), http.StatusNotFound, "method not expected")
 }
 
 func TestDroptable__Valid(t *testing.T) {
@@ -42,9 +42,9 @@ func TestDroptable__Valid(t *testing.T) {
 	}
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, middleware.CheckMethod("POST", app.DropTablesHandler), http.StatusOK, "")
+	utils.Test(t, req, middleware.CheckMethod("POST", c.DropTablesHandler), http.StatusOK, "")
 }
 
 func TestCreatetable__Valid(t *testing.T) {
@@ -54,7 +54,7 @@ func TestCreatetable__Valid(t *testing.T) {
 	}
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, middleware.CheckMethod("POST", app.CreateTablesHandler), http.StatusOK, "")
+	utils.Test(t, req, middleware.CheckMethod("POST", c.CreateTablesHandler), http.StatusOK, "")
 }

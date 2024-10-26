@@ -18,9 +18,9 @@ func TestAddUser__InvalidContentType(t *testing.T) {
 	}
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, app.CreateUserHandler, http.StatusUnsupportedMediaType, "Content-Type must be 'application/json'")
+	utils.Test(t, req, c.CreateUserHandler, http.StatusUnsupportedMediaType, "Content-Type must be 'application/json'")
 }
 
 // Testing Body
@@ -34,9 +34,9 @@ func TestAddUser__InvalidJSON(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, app.CreateUserHandler, http.StatusBadRequest, "")
+	utils.Test(t, req, c.CreateUserHandler, http.StatusBadRequest, "")
 }
 
 type TestCase struct {
@@ -64,9 +64,9 @@ func TestAddUser__ValidJson(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, app.CreateUserHandler, http.StatusOK, "{\"message\":\"User data added successfully!\"}")
+	utils.Test(t, req, c.CreateUserHandler, http.StatusOK, "{\"message\":\"User data added successfully!\"}")
 }
 
 func TestAddUser__ValidationFalseCases(t *testing.T) {
@@ -250,9 +250,9 @@ func TestAddUser__ValidationFalseCases(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 
 		db := database.Connect()
-		app := controllers.App{DB: db}
+		c := controllers.Controller{DB: db}
 
-		utils.Test(t, req, app.CreateUserHandler, tc.expectedStatus, "")
+		utils.Test(t, req, c.CreateUserHandler, tc.expectedStatus, "")
 	}
 }
 
@@ -269,9 +269,9 @@ func TestDeleteUser__ValidJson(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, app.DeleteUserHandler, http.StatusOK, "{\"message\":\"User deleted succesfully!\"}")
+	utils.Test(t, req, c.DeleteUserHandler, http.StatusOK, "{\"message\":\"User deleted succesfully!\"}")
 }
 
 func TestDeleteUserPerma__ValidJson(t *testing.T) {
@@ -287,9 +287,9 @@ func TestDeleteUserPerma__ValidJson(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, app.DeleteUserPermaHandler, http.StatusOK, "{\"message\":\"User deleted permanently succesfully!\"}")
+	utils.Test(t, req, c.DeleteUserPermaHandler, http.StatusOK, "{\"message\":\"User deleted permanently succesfully!\"}")
 }
 
 func TestDeleteUser__UserDoesNotExist(t *testing.T) {
@@ -305,7 +305,7 @@ func TestDeleteUser__UserDoesNotExist(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	db := database.Connect()
-	app := controllers.App{DB: db}
+	c := controllers.Controller{DB: db}
 
-	utils.Test(t, req, app.DeleteUserHandler, http.StatusBadRequest, "")
+	utils.Test(t, req, c.DeleteUserHandler, http.StatusBadRequest, "")
 }
