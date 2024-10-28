@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -31,10 +32,16 @@ func ValidateAndDecode(w http.ResponseWriter, r *http.Request, v interface{}) bo
 	return true
 }
 
-func SendJSONMessage(w http.ResponseWriter, status int, message string) {
+func SendJSON(w http.ResponseWriter, status int, jsonBytes []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(map[string]string{
-		"message": message,
-	})
+	w.Write(jsonBytes)
+}
+
+func SendJSONMessage(w http.ResponseWriter, status int, message string) {
+	message_json, err := json.Marshal(map[string]string{"message": message})
+	if err != nil {
+		log.Fatalf("something went wrong: %v", err.Error())
+	}
+	SendJSON(w, status, message_json)
 }

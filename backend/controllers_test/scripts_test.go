@@ -23,7 +23,7 @@ func TestCreatetable__InvalidMethod(t *testing.T) {
 	utils.Test(t, req, middleware.CheckMethod("POST", c.CreateTablesHandler), http.StatusNotFound, "method not expected")
 }
 
-func TestDroptable__InvalidMethod(t *testing.T) {
+func TestDropTable__InvalidMethod(t *testing.T) {
 	req, err := http.NewRequest(http.MethodGet, "/api/admin/dropAll", bytes.NewBuffer([]byte(``)))
 	if err != nil {
 		t.Fatalf("Couldn't create request: %v", err)
@@ -35,7 +35,7 @@ func TestDroptable__InvalidMethod(t *testing.T) {
 	utils.Test(t, req, middleware.CheckMethod("POST", c.DropTablesHandler), http.StatusNotFound, "method not expected")
 }
 
-func TestDroptable__Valid(t *testing.T) {
+func TestDropTable__Valid(t *testing.T) {
 	req, err := http.NewRequest(http.MethodPost, "/api/admin/dropAll", bytes.NewBuffer([]byte(``)))
 	if err != nil {
 		t.Fatalf("Couldn't create request: %v", err)

@@ -2,11 +2,15 @@ package controllers_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
+	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/affanhamid/go-ecommerce/controllers"
 	"github.com/affanhamid/go-ecommerce/database"
+	"github.com/affanhamid/go-ecommerce/models"
 	"github.com/affanhamid/go-ecommerce/utils"
 )
 
@@ -308,4 +312,42 @@ func TestDeleteUser__UserDoesNotExist(t *testing.T) {
 	c := controllers.Controller{DB: db}
 
 	utils.Test(t, req, c.DeleteUserHandler, http.StatusBadRequest, "")
+}
+
+func TestGetUser__Valid(t *testing.T) {
+	userEmail := `{
+		"email": "test@example.com"
+		}`
+	req, err := http.NewRequest(http.MethodPost, "/api/user", bytes.NewBuffer([]byte(userEmail)))
+	if err != nil {
+		t.Fatalf("Couldn't create request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	db := database.Connect()
+	c := controllers.Controller{DB: db}
+
+	rr := httptest.NewRecorder()
+	handler := http.Handler(http.HandlerFunc(c.GetUserHandler))
+
+	handler.ServeHTTP(rr, req)
+
+	expectedStatus := http.StatusOK
+
+	// Checking error code
+	if status := rr.Code; status != expectedStatus {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, expectedStatus)
+	}
+
+	actual := strings.TrimSpace(rr.Body.String())
+
+	var user models.User
+
+	if err := json.Unmarshal([]byte(actual), &user); err != nil {
+		t.Errorf("Error during unmarshalling: %v", err.Error())
+	}
+
+	if user.ID != 1 {
+		t.Errorf("Incorrect user: wanted 1, got %v", user.ID)
+	}
 }

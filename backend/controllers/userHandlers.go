@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -45,18 +46,43 @@ func (c *Controller) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	utils.SendJSONMessage(w, http.StatusOK, "User data added successfully!")
 }
 
+func (c *Controller) GetUserHandler(w http.ResponseWriter, r *http.Request) {
+
+	if !utils.ValidateJSONContentType(w, r) {
+		return
+	}
+
+	var userEmail models.UserEmail
+	if !utils.ValidateAndDecode(w, r, &userEmail) {
+		return
+	}
+
+	user, err := database.GetUser(userEmail.Email, c.DB)
+	if err != nil {
+		utils.SendJSONMessage(w, http.StatusInternalServerError, "Failed to fetch user: "+err.Error())
+		return
+	}
+
+	userJSON, err := json.Marshal(user)
+	if err != nil {
+		http.Error(w, "Error conveerting user to JSON object: "+err.Error(), http.StatusInternalServerError)
+	}
+
+	utils.SendJSON(w, http.StatusOK, userJSON)
+}
+
 func (c *Controller) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !utils.ValidateJSONContentType(w, r) {
 		return
 	}
 
-	var user models.DeleteUser
-	if !utils.ValidateAndDecode(w, r, &user) {
+	var userEmail models.UserEmail
+	if !utils.ValidateAndDecode(w, r, &userEmail) {
 		return
 	}
 
-	if err := database.DeleteUser(&user, c.DB); err != nil {
+	if err := database.DeleteUser(&userEmail, c.DB); err != nil {
 		utils.SendJSONMessage(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -69,12 +95,12 @@ func (c *Controller) DeleteUserPermaHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	var user models.DeleteUser
-	if !utils.ValidateAndDecode(w, r, &user) {
+	var userEmail models.UserEmail
+	if !utils.ValidateAndDecode(w, r, &userEmail) {
 		return
 	}
 
-	if err := database.DeleteUserPerma(&user, c.DB); err != nil {
+	if err := database.DeleteUserPerma(&userEmail, c.DB); err != nil {
 		utils.SendJSONMessage(w, http.StatusBadRequest, err.Error())
 		return
 	}
