@@ -52,9 +52,14 @@ func (c *Controller) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	query := r.URL.Query()
+
 	var userEmail models.UserEmail
-	if !utils.ValidateAndDecode(w, r, &userEmail) {
-		return
+
+	userEmail.Email = query.Get("email")
+
+	if userEmail.Email == "" {
+		utils.SendJSONMessage(w, http.StatusBadRequest, "No user email provided")
 	}
 
 	user, err := database.GetUser(userEmail.Email, c.DB)

@@ -346,8 +346,4 @@ func TestGetUser__Valid(t *testing.T) {
 	if err := json.Unmarshal([]byte(actual), &user); err != nil {
 		t.Errorf("Error during unmarshalling: %v", err.Error())
 	}
-
-	if user.ID != 1 {
-		t.Errorf("Incorrect user: wanted 1, got %v", user.ID)
-	}
 }

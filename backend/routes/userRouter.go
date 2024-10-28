@@ -16,5 +16,6 @@ func LoadUserRoutes(app *app.App) {
 
 	// address
 	http.HandleFunc("/api/add-address", middleware.CheckMethod("POST", app.Controller.AddAddressHandler))
-	http.HandleFunc("/api/delete-address", middleware.CheckMethod("POST", app.Controller.DeleteAddressHandler))
+	http.HandleFunc("/api/addresses", middleware.CheckMethod("GET", app.Controller.GetAddressesHandler))
+	http.HandleFunc("/api/delete-address", middleware.CheckMethod("DELETE", app.Controller.DeleteAddressHandler))
 }
